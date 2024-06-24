@@ -35,13 +35,6 @@ alighting_max_stations = subway_data_cleaned.loc[alighting_max_indices]
 alighting_max_counts = subway_data_cleaned[columns_to_convert[1::2]].max().values
 alighting_max_station_names = alighting_max_stations['지하철역'].values
 
-# 데이터 길이 확인
-st.write(f'Time Periods Length: {len(time_periods)}')
-st.write(f'Boarding Max Counts Length: {len(boarding_max_counts)}')
-st.write(f'Alighting Max Counts Length: {len(alighting_max_counts)}')
-st.write(f'Boarding Max Station Names Length: {len(boarding_max_station_names)}')
-st.write(f'Alighting Max Station Names Length: {len(alighting_max_station_names)}')
-
 # 데이터 길이 일치 확인 및 처리
 if len(alighting_max_counts) < len(time_periods):
     alighting_max_counts = list(alighting_max_counts) + [0] * (len(time_periods) - len(alighting_max_counts))
