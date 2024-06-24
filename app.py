@@ -29,8 +29,8 @@ station_data = subway_data_cleaned[(subway_data_cleaned['호선명'] == selected
 
 # 시간대별 그래프 생성
 time_periods = [col.split('~')[0] for col in columns_to_convert[::2]]
-boardings = station_data[columns_to_convert[::2]].sum()
-alightings = station_data[columns_to_convert[1::2]].sum()
+boardings = station_data[columns_to_convert[::2]].sum().values
+alightings = station_data[columns_to_convert[1::2]].sum().values
 
 fig, ax = plt.subplots()
 ax.plot(time_periods, boardings, label='승차', marker='o')
@@ -55,10 +55,10 @@ selected_station_2 = st.selectbox('역 2를 선택하세요', station_options_2,
 station_data_1 = subway_data_cleaned[(subway_data_cleaned['호선명'] == selected_line_1) & (subway_data_cleaned['지하철역'] == selected_station_1)]
 station_data_2 = subway_data_cleaned[(subway_data_cleaned['호선명'] == selected_line_2) & (subway_data_cleaned['지하철역'] == selected_station_2)]
 
-boardings_1 = station_data_1[columns_to_convert[::2]].sum()
-alightings_1 = station_data_1[columns_to_convert[1::2]].sum()
-boardings_2 = station_data_2[columns_to_convert[::2]].sum()
-alightings_2 = station_data_2[columns_to_convert[1::2]].sum()
+boardings_1 = station_data_1[columns_to_convert[::2]].sum().values
+alightings_1 = station_data_1[columns_to_convert[1::2]].sum().values
+boardings_2 = station_data_2[columns_to_convert[::2]].sum().values
+alightings_2 = station_data_2[columns_to_convert[1::2]].sum().values
 
 fig, ax = plt.subplots()
 ax.plot(time_periods, boardings_1, label=f'{selected_station_1} 승차', marker='o')
