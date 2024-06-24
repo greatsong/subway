@@ -7,6 +7,7 @@ import koreanize_matplotlib
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
 subway_data = pd.read_csv(csv_file_path)
 
+
 # 데이터 전처리
 subway_data_cleaned = subway_data.drop(0).reset_index(drop=True)
 
@@ -18,6 +19,9 @@ def clean_numeric_column(column):
 columns_to_convert = subway_data_cleaned.columns[4:]
 for column in columns_to_convert:
     subway_data_cleaned[column] = clean_numeric_column(subway_data_cleaned[column])
+
+# 시간대별 그래프 생성
+time_periods = [col.split('~')[0][:2] for col in columns_to_convert[::2]]  # 시간대 2자리로 축약
 
 # 시간대별 승차 인원 최다 역 찾기
 boarding_max_indices = subway_data_cleaned[columns_to_convert[::2]].idxmax()
@@ -32,7 +36,7 @@ alighting_max_counts = subway_data_cleaned[columns_to_convert[1::2]].max().value
 alighting_max_station_names = alighting_max_stations['지하철역'].values
 
 # 데이터 길이 확인
-st.write(f'Time Periods Length: {len(columns_to_convert[::2])}')
+st.write(f'Time Periods Length: {len(time_periods)}')
 st.write(f'Boarding Max Counts Length: {len(boarding_max_counts)}')
 st.write(f'Alighting Max Counts Length: {len(alighting_max_counts)}')
 st.write(f'Boarding Max Station Names Length: {len(boarding_max_station_names)}')
@@ -43,9 +47,6 @@ if len(alighting_max_counts) < len(time_periods):
     alighting_max_counts = list(alighting_max_counts) + [0] * (len(time_periods) - len(alighting_max_counts))
 if len(alighting_max_station_names) < len(time_periods):
     alighting_max_station_names = list(alighting_max_station_names) + [""] * (len(time_periods) - len(alighting_max_station_names))
-
-# 시간대별 그래프 생성
-time_periods = [col.split('~')[0][:2] for col in columns_to_convert[::2]]  # 시간대 2자리로 축약
 
 # 시간대별 승차 인원 최다 역 그래프 그리기
 fig, ax = plt.subplots()
