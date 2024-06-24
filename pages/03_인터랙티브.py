@@ -43,13 +43,13 @@ else:
 
             if graph_type == '막대 그래프':
                 fig = go.Figure(data=[
-                    go.Bar(name='승차', x=time_periods, y=boardings, marker_color='skyblue'),
-                    go.Bar(name='하차', x=time_periods, y=alightings, marker_color='salmon')
+                    go.Bar(name='승차', x=time_periods, y=boardings, marker_color='skyblue', hoverinfo='x+y'),
+                    go.Bar(name='하차', x=time_periods, y=alightings, marker_color='salmon', hoverinfo='x+y')
                 ])
             else:  # '꺾은선 그래프'
                 fig = go.Figure(data=[
-                    go.Scatter(name='승차', x=time_periods, y=boardings, mode='lines+markers', marker=dict(color='blue')),
-                    go.Scatter(name='하차', x=time_periods, y=alightings, mode='lines+markers', marker=dict(color='red'))
+                    go.Scatter(name='승차', x=time_periods, y=boardings, mode='lines+markers', marker=dict(color='blue'), hoverinfo='x+y'),
+                    go.Scatter(name='하차', x=time_periods, y=alightings, mode='lines+markers', marker=dict(color='red'), hoverinfo='x+y')
                 ])
 
             fig.update_layout(
@@ -58,12 +58,25 @@ else:
                 yaxis_title='인원수',
                 legend_title='구분',
                 xaxis=dict(tickmode='array', tickvals=x, ticktext=time_periods),
-                barmode='group'
+                barmode='group',
+                hovermode='x unified',
+                annotations=[dict(
+                    x=1,
+                    y=1,
+                    xref='paper',
+                    yref='paper',
+                    text='서울고 교사 석리송 제작, GPT-4 도움',
+                    showarrow=False,
+                    font=dict(size=12),
+                    xanchor='right',
+                    yanchor='bottom'
+                )]
             )
 
             fig.update_traces(
                 hoverlabel=dict(
-                    font_size=16  # 글씨 크기 설정
+                    font_size=16,  # 글씨 크기 설정
+                    namelength=-1  # 모든 이름을 표시
                 )
             )
 
@@ -87,13 +100,13 @@ else:
 
             if graph_type == '막대 그래프':
                 fig = go.Figure(data=[
-                    go.Bar(name=f'{station_name_1} {data_type}', x=time_periods, y=data_1, marker_color='skyblue'),
-                    go.Bar(name=f'{station_name_2} {data_type}', x=time_periods, y=data_2, marker_color='salmon')
+                    go.Bar(name=f'{station_name_1} {data_type}', x=time_periods, y=data_1, marker_color='skyblue', hoverinfo='x+y'),
+                    go.Bar(name=f'{station_name_2} {data_type}', x=time_periods, y=data_2, marker_color='salmon', hoverinfo='x+y')
                 ])
             else:  # '꺾은선 그래프'
                 fig = go.Figure(data=[
-                    go.Scatter(name=f'{station_name_1} {data_type}', x=time_periods, y=data_1, mode='lines+markers', marker=dict(color='blue')),
-                    go.Scatter(name=f'{station_name_2} {data_type}', x=time_periods, y=data_2, mode='lines+markers', marker=dict(color='red'))
+                    go.Scatter(name=f'{station_name_1} {data_type}', x=time_periods, y=data_1, mode='lines+markers', marker=dict(color='blue'), hoverinfo='x+y'),
+                    go.Scatter(name=f'{station_name_2} {data_type}', x=time_periods, y=data_2, mode='lines+markers', marker=dict(color='red'), hoverinfo='x+y')
                 ])
 
             fig.update_layout(
@@ -102,12 +115,25 @@ else:
                 yaxis_title='인원수',
                 legend_title='역',
                 xaxis=dict(tickmode='array', tickvals=x, ticktext=time_periods),
-                barmode='group'
+                barmode='group',
+                hovermode='x unified',
+                annotations=[dict(
+                    x=1,
+                    y=1,
+                    xref='paper',
+                    yref='paper',
+                    text='서울고 교사 석리송 제작, GPT-4 도움',
+                    showarrow=False,
+                    font=dict(size=12),
+                    xanchor='right',
+                    yanchor='bottom'
+                )]
             )
 
             fig.update_traces(
                 hoverlabel=dict(
-                    font_size=16  # 글씨 크기 설정
+                    font_size=16,  # 글씨 크기 설정
+                    namelength=-1  # 모든 이름을 표시
                 )
             )
 
