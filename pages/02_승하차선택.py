@@ -74,15 +74,6 @@ else:
 
             st.pyplot(fig)
 
-        # 호선과 역 선택
-        line_options = subway_data_cleaned['호선명'].unique()
-        selected_line = st.selectbox('호선을 선택하세요', line_options)
-        station_options = subway_data_cleaned[subway_data_cleaned['호선명'] == selected_line]['지하철역'].unique()
-        selected_station = st.selectbox('역을 선택하세요', station_options)
-
-        # 선택한 역의 데이터 필터링 및 그래프 생성
-        station_data = get_station_data(selected_line, selected_station)
-
         # 두 역 비교
         st.header('두 역 비교')
 
