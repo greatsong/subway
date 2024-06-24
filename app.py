@@ -7,6 +7,13 @@ import koreanize_matplotlib
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
 subway_data = pd.read_csv(csv_file_path)
 
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 데이터 로드
+csv_file_path = '/mnt/data/2024년 05월  교통카드 통계자료.csv'
+subway_data = pd.read_csv(csv_file_path)
 
 # 데이터 전처리
 subway_data_cleaned = subway_data.drop(0).reset_index(drop=True)
@@ -30,7 +37,7 @@ selected_station = st.selectbox('역을 선택하세요', station_options)
 station_data = subway_data_cleaned[(subway_data_cleaned['호선명'] == selected_line) & (subway_data_cleaned['지하철역'] == selected_station)]
 
 # 시간대별 그래프 생성
-time_periods = [col.split('~')[0] for col in columns_to_convert[::2]]
+time_periods = [col.split('~')[0][:2] for col in columns_to_convert[::2]]  # 시간대 2자리로 축약
 boardings = station_data[columns_to_convert[::2]].sum().values
 alightings = station_data[columns_to_convert[1::2]].sum().values
 
@@ -38,13 +45,20 @@ alightings = station_data[columns_to_convert[1::2]].sum().values
 if len(alightings) < len(time_periods):
     alightings = list(alightings) + [0] * (len(time_periods) - len(alightings))
 
-# 그래프 그리기
+
+# 막대 그래프 그리기
 fig, ax = plt.subplots()
-ax.plot(time_periods, boardings, label='승차', marker='o')
-ax.plot(time_periods, alightings, label='하차', marker='o')
+width = 0.35  # 막대의 너비
+x = range(len(time_periods))
+
+ax.bar(x, boardings, width, label='승차')
+ax.bar([p + width for p in x], alightings, width, label='하차')
+
 ax.set_xlabel('시간대')
 ax.set_ylabel('인원수')
 ax.set_title(f'{selected_station} 시간대별 승하차 인원수')
+ax.set_xticks([p + width/2 for p in x])
+ax.set_xticklabels(time_periods, rotation=90)
 ax.legend()
 
 st.pyplot(fig)
@@ -73,14 +87,22 @@ if len(alightings_1) < len(time_periods):
 if len(alightings_2) < len(time_periods):
     alightings_2 = list(alightings_2) + [0] * (len(time_periods) - len(alightings_2))
 
+# 두 역 비교 막대 그래프 그리기
 fig, ax = plt.subplots()
-ax.plot(time_periods, boardings_1, label=f'{selected_station_1} 승차', marker='o')
-ax.plot(time_periods, alightings_1, label=f'{selected_station_1} 하차', marker='o')
-ax.plot(time_periods, boardings_2, label=f'{selected_station_2} 승차', marker='o')
-ax.plot(time_periods, alightings_2, label=f'{selected_station_2} 하차', marker='o')
+width = 0.2  # 막대의 너비
+x = range(len(time_periods))
+
+ax.bar([p - width for p in x], boardings_1, width, label=f'{selected_station_1} 승차')
+ax.bar(x, alightings_1, width, label=f'{selected_station_1} 하차')
+ax.bar([p + width for p in x], boardings_2, width, label=f'{selected_station_2} 승차')
+ax.bar([p + 2*width for p in x], alightings_2, width, label=f'{selected_station_2} 하차')
+
 ax.set_xlabel('시간대')
 ax.set_ylabel('인원수')
 ax.set_title('두 역 시간대별 승하차 인원수 비교')
+ax.set_xticks([p + width for p in x])
+ax.set_xticklabels(time_periods, rotation=90)
 ax.legend()
 
 st.pyplot(fig)
+
