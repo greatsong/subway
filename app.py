@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import koreanize_matplotlib
+import koreanize-matplotlib
 
 # 데이터 로드
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
