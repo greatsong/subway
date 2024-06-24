@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import koreanize_matplotlib
 
 # 데이터 로드
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
@@ -76,13 +77,6 @@ if len(alightings_1) < len(time_periods):
     alightings_1 = list(alightings_1) + [0] * (len(time_periods) - len(alightings_1))
 if len(alightings_2) < len(time_periods):
     alightings_2 = list(alightings_2) + [0] * (len(time_periods) - len(alightings_2))
-
-# 시간대와 승하차 데이터 길이 확인
-st.write(f'Time Periods Length: {len(time_periods)}')
-st.write(f'Boardings 1 Length: {len(boardings_1)}')
-st.write(f'Alightings 1 Length: {len(alightings_1)}')
-st.write(f'Boardings 2 Length: {len(boardings_2)}')
-st.write(f'Alightings 2 Length: {len(alightings_2)}')
 
 fig, ax = plt.subplots()
 ax.plot(time_periods, boardings_1, label=f'{selected_station_1} 승차', marker='o')
