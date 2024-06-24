@@ -20,12 +20,14 @@ for column in columns_to_convert:
     subway_data_cleaned[column] = clean_numeric_column(subway_data_cleaned[column])
 
 # 시간대별 승차 인원 최다 역 찾기
-boarding_max_stations = subway_data_cleaned.loc[subway_data_cleaned[columns_to_convert[::2]].idxmax()]
+boarding_max_indices = subway_data_cleaned[columns_to_convert[::2]].idxmax()
+boarding_max_stations = subway_data_cleaned.loc[boarding_max_indices]
 boarding_max_counts = subway_data_cleaned[columns_to_convert[::2]].max().values
 boarding_max_station_names = boarding_max_stations['지하철역'].values
 
 # 시간대별 하차 인원 최다 역 찾기
-alighting_max_stations = subway_data_cleaned.loc[subway_data_cleaned[columns_to_convert[1::2]].idxmax()]
+alighting_max_indices = subway_data_cleaned[columns_to_convert[1::2]].idxmax()
+alighting_max_stations = subway_data_cleaned.loc[alighting_max_indices]
 alighting_max_counts = subway_data_cleaned[columns_to_convert[1::2]].max().values
 alighting_max_station_names = alighting_max_stations['지하철역'].values
 
