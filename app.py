@@ -38,11 +38,6 @@ alightings = station_data[columns_to_convert[1::2]].sum().values
 if len(alightings) < len(time_periods):
     alightings = list(alightings) + [0] * (len(time_periods) - len(alightings))
 
-# 시간대와 승하차 데이터 길이 확인
-st.write(f'Time Periods Length: {len(time_periods)}')
-st.write(f'Boardings Length: {len(boardings)}')
-st.write(f'Alightings Length: {len(alightings)}')
-
 # 그래프 그리기
 fig, ax = plt.subplots()
 ax.plot(time_periods, boardings, label='승차', marker='o')
