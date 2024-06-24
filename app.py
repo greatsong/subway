@@ -38,6 +38,12 @@ st.write(f'Alighting Max Counts Length: {len(alighting_max_counts)}')
 st.write(f'Boarding Max Station Names Length: {len(boarding_max_station_names)}')
 st.write(f'Alighting Max Station Names Length: {len(alighting_max_station_names)}')
 
+# 데이터 길이 일치 확인 및 처리
+if len(alighting_max_counts) < len(time_periods):
+    alighting_max_counts = list(alighting_max_counts) + [0] * (len(time_periods) - len(alighting_max_counts))
+if len(alighting_max_station_names) < len(time_periods):
+    alighting_max_station_names = list(alighting_max_station_names) + [""] * (len(time_periods) - len(alighting_max_station_names))
+
 # 시간대별 그래프 생성
 time_periods = [col.split('~')[0][:2] for col in columns_to_convert[::2]]  # 시간대 2자리로 축약
 
@@ -78,4 +84,3 @@ for i, v in enumerate(alighting_max_counts):
     ax.text(i, v + 100, str(alighting_max_station_names[i]), ha='center', rotation=90)
 
 st.pyplot(fig)
-
