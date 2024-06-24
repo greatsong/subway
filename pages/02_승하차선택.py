@@ -76,7 +76,6 @@ else:
 
         # 선택한 역의 데이터 필터링 및 그래프 생성
         station_data = get_station_data(selected_line, selected_station)
-        plot_station_data(station_data, selected_station, f'{selected_station} 시간대별 승하차 인원수')
 
         # 두 역 비교
         st.header('두 역 비교')
@@ -100,3 +99,4 @@ else:
 
     except Exception as e:
         st.error(f"CSV 파일을 읽는 중 오류가 발생했습니다: {e}")
+
