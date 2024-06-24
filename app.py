@@ -32,6 +32,12 @@ time_periods = [col.split('~')[0] for col in columns_to_convert[::2]]
 boardings = station_data[columns_to_convert[::2]].sum().values
 alightings = station_data[columns_to_convert[1::2]].sum().values
 
+# 시간대와 승하차 데이터 길이 확인
+st.write(f'Time Periods Length: {len(time_periods)}')
+st.write(f'Boardings Length: {len(boardings)}')
+st.write(f'Alightings Length: {len(alightings)}')
+
+# 그래프 그리기
 fig, ax = plt.subplots()
 ax.plot(time_periods, boardings, label='승차', marker='o')
 ax.plot(time_periods, alightings, label='하차', marker='o')
@@ -59,6 +65,13 @@ boardings_1 = station_data_1[columns_to_convert[::2]].sum().values
 alightings_1 = station_data_1[columns_to_convert[1::2]].sum().values
 boardings_2 = station_data_2[columns_to_convert[::2]].sum().values
 alightings_2 = station_data_2[columns_to_convert[1::2]].sum().values
+
+# 시간대와 승하차 데이터 길이 확인
+st.write(f'Time Periods Length: {len(time_periods)}')
+st.write(f'Boardings 1 Length: {len(boardings_1)}')
+st.write(f'Alightings 1 Length: {len(alightings_1)}')
+st.write(f'Boardings 2 Length: {len(boardings_2)}')
+st.write(f'Alightings 2 Length: {len(alightings_2)}')
 
 fig, ax = plt.subplots()
 ax.plot(time_periods, boardings_1, label=f'{selected_station_1} 승차', marker='o')
