@@ -3,7 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import koreanize_matplotlib
 
-st.title('수도권 교통 카드 데이터 분석 프로젝트(by 서울고 교사 석리송)')
+st.markdown(
+    """
+    <h1 style='font-size:20px;'>수도권 교통 카드 데이터 분석 프로젝트(by 서울고 교사 석리송)</h1>
+    """, 
+    unsafe_allow_html=True
+)
 
 # 데이터 로드
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
