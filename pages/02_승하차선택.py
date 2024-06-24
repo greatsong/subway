@@ -6,8 +6,6 @@ import os
 
 # 데이터 로드
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
-
-
 # 파일 존재 여부 확인
 if not os.path.exists(csv_file_path):
     st.error(f"파일을 찾을 수 없습니다: {csv_file_path}")
@@ -32,7 +30,46 @@ else:
         def get_station_data(line, station):
             return subway_data_cleaned[(subway_data_cleaned['호선명'] == line) & (subway_data_cleaned['지하철역'] == station)]
 
-        def plot_data(station_data_1, station_data_2, station_name_1, station_name_2, time_periods, graph_type, data_type):
+        def plot_single_station_data(station_data, station_name, time_periods, graph_type):
+            boardings = station_data[columns_to_convert[::2]].sum().values
+            alightings = station_data[columns_to_convert[1::2]].sum().values
+
+            # 데이터 길이 맞추기
+            min_length = min(len(boardings), len(alightings), len(time_periods))
+            boardings = boardings[:min_length]
+            alightings = alightings[:min_length]
+            time_periods = time_periods[:min_length]
+
+            fig, ax = plt.subplots(figsize=(12, 8))
+            x = range(len(time_periods))
+
+            if graph_type == '막대 그래프':
+                width = 0.35
+                ax.bar([p - width/2 for p in x], boardings, width, label='승차', color='skyblue')
+                ax.bar([p + width/2 for p in x], alightings, width, label='하차', color='salmon')
+            else:  # '꺾은선 그래프'
+                ax.plot(x, boardings, label='승차', color='blue', marker='o')
+                ax.plot(x, alightings, label='하차', color='red', marker='o')
+
+            ax.set_xlabel('시간대', fontsize=14)
+            ax.set_ylabel('인원수', fontsize=14)
+            ax.set_title(f'{station_name} 시간대별 승하차 인원수', fontsize=16)
+            ax.set_xticks(x)
+            ax.set_xticklabels(time_periods, rotation=90, fontsize=12)
+            ax.legend()
+            ax.grid(axis='y', linestyle='--', alpha=0.7)
+
+            for i in range(len(time_periods)):
+                if graph_type == '막대 그래프':
+                    ax.text(i - width/2, boardings[i] + 5, str(boardings[i]), ha='center', fontsize=10, color='blue')
+                    ax.text(i + width/2, alightings[i] + 5, str(alightings[i]), ha='center', fontsize=10, color='red')
+                else:  # '꺾은선 그래프'
+                    ax.text(i, boardings[i] + 5, str(boardings[i]), ha='center', fontsize=10, color='blue')
+                    ax.text(i, alightings[i] + 5, str(alightings[i]), ha='center', fontsize=10, color='red')
+
+            st.pyplot(fig)
+
+        def plot_comparison_data(station_data_1, station_data_2, station_name_1, station_name_2, time_periods, graph_type, data_type):
             if data_type == '승차':
                 data_1 = station_data_1[columns_to_convert[::2]].sum().values
                 data_2 = station_data_2[columns_to_convert[::2]].sum().values
@@ -81,8 +118,13 @@ else:
         station_options = subway_data_cleaned[subway_data_cleaned['호선명'] == selected_line]['지하철역'].unique()
         selected_station = st.selectbox('역을 선택하세요', station_options)
 
+        # 그래프 타입 선택
+        graph_type = st.selectbox('그래프 종류를 선택하세요', ['막대 그래프', '꺾은선 그래프'])
+
         # 선택한 역의 데이터 필터링 및 그래프 생성
         station_data = get_station_data(selected_line, selected_station)
+        time_periods = [col.split('~')[0] for col in columns_to_convert[::2]]
+        plot_single_station_data(station_data, selected_station, time_periods, graph_type)
 
         # 두 역 비교
         st.header('두 역 비교')
@@ -95,14 +137,16 @@ else:
         station_options_2 = subway_data_cleaned[subway_data_cleaned['호선명'] == selected_line_2]['지하철역'].unique()
         selected_station_2 = st.selectbox('역 2를 선택하세요', station_options_2, key='station2')
 
-        graph_type = st.selectbox('그래프 종류를 선택하세요', ['막대 그래프', '꺾은선 그래프'])
-        data_type = st.selectbox('데이터 종류를 선택하세요', ['승차', '하차'])
+        # 그래프 타입 선택
+        graph_type = st.selectbox('비교 그래프 종류를 선택하세요', ['막대 그래프', '꺾은선 그래프'], key='comparison_graph_type')
+        data_type = st.selectbox('데이터 종류를 선택하세요', ['승차', '하차'], key='data_type')
 
         station_data_1 = get_station_data(selected_line_1, selected_station_1)
         station_data_2 = get_station_data(selected_line_2, selected_station_2)
 
         time_periods = [col.split('~')[0] for col in columns_to_convert[::2]]
-        plot_data(station_data_1, station_data_2, selected_station_1, selected_station_2, time_periods, graph_type, data_type)
+        plot_comparison_data(station_data_1, station_data_2, selected_station_1, selected_station_2, time_periods, graph_type, data_type)
 
     except Exception as e:
         st.error(f"CSV 파일을 읽는 중 오류가 발생했습니다: {e}")
+
