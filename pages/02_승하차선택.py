@@ -39,6 +39,12 @@ else:
                 data_1 = station_data_1[columns_to_convert[1::2]].sum().values
                 data_2 = station_data_2[columns_to_convert[1::2]].sum().values
 
+            # 데이터 길이 맞추기
+            min_length = min(len(data_1), len(data_2), len(time_periods))
+            data_1 = data_1[:min_length]
+            data_2 = data_2[:min_length]
+            time_periods = time_periods[:min_length]
+
             fig, ax = plt.subplots(figsize=(12, 8))
             x = range(len(time_periods))
 
@@ -99,4 +105,3 @@ else:
 
     except Exception as e:
         st.error(f"CSV 파일을 읽는 중 오류가 발생했습니다: {e}")
-
