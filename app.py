@@ -5,8 +5,7 @@ import koreanize_matplotlib
 
 # 데이터 로드
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
-subway_data = pd.read_csv(csv_file_path)import streamlit as st
-
+subway_data = pd.read_csv(csv_file_path)
 # 데이터 전처리
 subway_data_cleaned = subway_data.drop(0).reset_index(drop=True)
 
