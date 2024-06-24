@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
 subway_data = pd.read_csv(csv_file_path)
 
+
 # 데이터 전처리
 subway_data_cleaned = subway_data.drop(0).reset_index(drop=True)
 
@@ -31,6 +32,10 @@ station_data = subway_data_cleaned[(subway_data_cleaned['호선명'] == selected
 time_periods = [col.split('~')[0] for col in columns_to_convert[::2]]
 boardings = station_data[columns_to_convert[::2]].sum().values
 alightings = station_data[columns_to_convert[1::2]].sum().values
+
+# 데이터 길이 일치 확인 및 처리
+if len(alightings) < len(time_periods):
+    alightings = list(alightings) + [0] * (len(time_periods) - len(alightings))
 
 # 시간대와 승하차 데이터 길이 확인
 st.write(f'Time Periods Length: {len(time_periods)}')
@@ -65,6 +70,12 @@ boardings_1 = station_data_1[columns_to_convert[::2]].sum().values
 alightings_1 = station_data_1[columns_to_convert[1::2]].sum().values
 boardings_2 = station_data_2[columns_to_convert[::2]].sum().values
 alightings_2 = station_data_2[columns_to_convert[1::2]].sum().values
+
+# 데이터 길이 일치 확인 및 처리
+if len(alightings_1) < len(time_periods):
+    alightings_1 = list(alightings_1) + [0] * (len(time_periods) - len(alightings_1))
+if len(alightings_2) < len(time_periods):
+    alightings_2 = list(alightings_2) + [0] * (len(time_periods) - len(alightings_2))
 
 # 시간대와 승하차 데이터 길이 확인
 st.write(f'Time Periods Length: {len(time_periods)}')
