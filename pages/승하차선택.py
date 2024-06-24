@@ -5,7 +5,7 @@ import koreanize_matplotlib
 import os
 
 # 데이터 로드
-csv_file_path = '2024년 05월  교통카드 통계자료.csv'
+csv_file_path = '2024년 05월  교통카드 통계자료.csv'
 
 # 파일 존재 여부 확인
 if not os.path.exists(csv_file_path):
