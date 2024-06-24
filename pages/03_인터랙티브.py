@@ -61,6 +61,12 @@ else:
                 barmode='group'
             )
 
+            fig.update_traces(
+                hoverlabel=dict(
+                    font_size=16  # 글씨 크기 설정
+                )
+            )
+
             st.plotly_chart(fig)
 
         def plot_comparison_data(station_data_1, station_data_2, station_name_1, station_name_2, time_periods, graph_type, data_type):
@@ -97,6 +103,12 @@ else:
                 legend_title='역',
                 xaxis=dict(tickmode='array', tickvals=x, ticktext=time_periods),
                 barmode='group'
+            )
+
+            fig.update_traces(
+                hoverlabel=dict(
+                    font_size=16  # 글씨 크기 설정
+                )
             )
 
             st.plotly_chart(fig)
