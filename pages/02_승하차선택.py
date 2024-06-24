@@ -7,6 +7,7 @@ import os
 # 데이터 로드
 csv_file_path = '2024년 05월  교통카드 통계자료.csv'
 
+
 # 파일 존재 여부 확인
 if not os.path.exists(csv_file_path):
     st.error(f"파일을 찾을 수 없습니다: {csv_file_path}")
@@ -73,6 +74,15 @@ else:
                     ax.text(i, data_2[i] + 5, str(data_2[i]), ha='center', fontsize=10, color='red')
 
             st.pyplot(fig)
+
+        # 호선과 역 선택
+        line_options = subway_data_cleaned['호선명'].unique()
+        selected_line = st.selectbox('호선을 선택하세요', line_options)
+        station_options = subway_data_cleaned[subway_data_cleaned['호선명'] == selected_line]['지하철역'].unique()
+        selected_station = st.selectbox('역을 선택하세요', station_options)
+
+        # 선택한 역의 데이터 필터링 및 그래프 생성
+        station_data = get_station_data(selected_line, selected_station)
 
         # 두 역 비교
         st.header('두 역 비교')
