@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import koreanize_matplotlib
+import plotly.express as px
+import plotly.graph_objects as go
 import os
 
 # 데이터 로드
@@ -39,34 +39,29 @@ else:
             alightings = alightings[:min_length]
             time_periods = time_periods[:min_length]
 
-            fig, ax = plt.subplots(figsize=(12, 8))
-            x = range(len(time_periods))
+            x = list(range(len(time_periods)))
 
             if graph_type == '막대 그래프':
-                width = 0.35
-                ax.bar([p - width/2 for p in x], boardings, width, label='승차', color='skyblue')
-                ax.bar([p + width/2 for p in x], alightings, width, label='하차', color='salmon')
+                fig = go.Figure(data=[
+                    go.Bar(name='승차', x=time_periods, y=boardings, marker_color='skyblue'),
+                    go.Bar(name='하차', x=time_periods, y=alightings, marker_color='salmon')
+                ])
             else:  # '꺾은선 그래프'
-                ax.plot(x, boardings, label='승차', color='blue', marker='o')
-                ax.plot(x, alightings, label='하차', color='red', marker='o')
+                fig = go.Figure(data=[
+                    go.Scatter(name='승차', x=time_periods, y=boardings, mode='lines+markers', marker=dict(color='blue')),
+                    go.Scatter(name='하차', x=time_periods, y=alightings, mode='lines+markers', marker=dict(color='red'))
+                ])
 
-            ax.set_xlabel('시간대', fontsize=14)
-            ax.set_ylabel('인원수', fontsize=14)
-            ax.set_title(f'{station_name} 시간대별 승하차 인원수', fontsize=16)
-            ax.set_xticks(x)
-            ax.set_xticklabels(time_periods, rotation=90, fontsize=12)
-            ax.legend()
-            ax.grid(axis='y', linestyle='--', alpha=0.7)
+            fig.update_layout(
+                title=f'{station_name} 시간대별 승하차 인원수',
+                xaxis_title='시간대',
+                yaxis_title='인원수',
+                legend_title='구분',
+                xaxis=dict(tickmode='array', tickvals=x, ticktext=time_periods),
+                barmode='group'
+            )
 
-            for i in range(len(time_periods)):
-                if graph_type == '막대 그래프':
-                    ax.text(i - width/2, boardings[i] + 5, str(boardings[i]), ha='center', fontsize=10, color='blue')
-                    ax.text(i + width/2, alightings[i] + 5, str(alightings[i]), ha='center', fontsize=10, color='red')
-                else:  # '꺾은선 그래프'
-                    ax.text(i, boardings[i] + 5, str(boardings[i]), ha='center', fontsize=10, color='blue')
-                    ax.text(i, alightings[i] + 5, str(alightings[i]), ha='center', fontsize=10, color='red')
-
-            st.pyplot(fig)
+            st.plotly_chart(fig)
 
         def plot_comparison_data(station_data_1, station_data_2, station_name_1, station_name_2, time_periods, graph_type, data_type):
             if data_type == '승차':
@@ -82,34 +77,29 @@ else:
             data_2 = data_2[:min_length]
             time_periods = time_periods[:min_length]
 
-            fig, ax = plt.subplots(figsize=(12, 8))
-            x = range(len(time_periods))
+            x = list(range(len(time_periods)))
 
             if graph_type == '막대 그래프':
-                width = 0.35
-                ax.bar([p - width/2 for p in x], data_1, width, label=f'{station_name_1} {data_type}', color='skyblue')
-                ax.bar([p + width/2 for p in x], data_2, width, label=f'{station_name_2} {data_type}', color='salmon')
+                fig = go.Figure(data=[
+                    go.Bar(name=f'{station_name_1} {data_type}', x=time_periods, y=data_1, marker_color='skyblue'),
+                    go.Bar(name=f'{station_name_2} {data_type}', x=time_periods, y=data_2, marker_color='salmon')
+                ])
             else:  # '꺾은선 그래프'
-                ax.plot(x, data_1, label=f'{station_name_1} {data_type}', color='blue', marker='o')
-                ax.plot(x, data_2, label=f'{station_name_2} {data_type}', color='red', marker='o')
+                fig = go.Figure(data=[
+                    go.Scatter(name=f'{station_name_1} {data_type}', x=time_periods, y=data_1, mode='lines+markers', marker=dict(color='blue')),
+                    go.Scatter(name=f'{station_name_2} {data_type}', x=time_periods, y=data_2, mode='lines+markers', marker=dict(color='red'))
+                ])
 
-            ax.set_xlabel('시간대', fontsize=14)
-            ax.set_ylabel('인원수', fontsize=14)
-            ax.set_title(f'두 역 시간대별 {data_type} 인원 비교', fontsize=16)
-            ax.set_xticks(x)
-            ax.set_xticklabels(time_periods, rotation=90, fontsize=12)
-            ax.legend()
-            ax.grid(axis='y', linestyle='--', alpha=0.7)
+            fig.update_layout(
+                title=f'두 역 시간대별 {data_type} 인원 비교',
+                xaxis_title='시간대',
+                yaxis_title='인원수',
+                legend_title='역',
+                xaxis=dict(tickmode='array', tickvals=x, ticktext=time_periods),
+                barmode='group'
+            )
 
-            for i in range(len(time_periods)):
-                if graph_type == '막대 그래프':
-                    ax.text(i - width/2, data_1[i] + 5, str(data_1[i]), ha='center', fontsize=10, color='blue')
-                    ax.text(i + width/2, data_2[i] + 5, str(data_2[i]), ha='center', fontsize=10, color='red')
-                else:  # '꺾은선 그래프'
-                    ax.text(i, data_1[i] + 5, str(data_1[i]), ha='center', fontsize=10, color='blue')
-                    ax.text(i, data_2[i] + 5, str(data_2[i]), ha='center', fontsize=10, color='red')
-
-            st.pyplot(fig)
+            st.plotly_chart(fig)
 
         # 호선과 역 선택
         line_options = subway_data_cleaned['호선명'].unique()
